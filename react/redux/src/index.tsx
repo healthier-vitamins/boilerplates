@@ -1,32 +1,14 @@
 import { createRoot } from 'react-dom/client'
-import {
-    Outlet,
-    Route,
-    RouterProvider,
-    createBrowserRouter,
-    createRoutesFromElements
-} from 'react-router-dom'
-import ErrorPage from './pages/errors/ErrorPage'
-import './styles/main.css'
+import { Route, Routes } from 'react-router-dom'
+import './assets/main.css'
 
 import { Provider } from 'react-redux'
+import ErrorBoundary from './components/error/ErrorBoundary'
+import CustomRouter from './components/router/CustomBrowserRouter'
+import customHistory from './components/router/CustomHistory'
+import NotFoundPage from './pages/Error/NotFoundPage'
+import Main from './pages/Main/Main'
 import store from './redux/store'
-
-export const router = createBrowserRouter(
-    createRoutesFromElements(
-        <Route
-            path={'/'}
-            element={
-                <div>
-                    <>{console.log(process.env.TEST)}</>
-                    <div>hello werld</div>
-                    <Outlet />
-                </div>
-            }
-            errorElement={<ErrorPage />}
-        ></Route>
-    )
-)
 
 // update react 18
 // https://react.dev/blog/2022/03/08/react-18-upgrade-guide
@@ -34,6 +16,15 @@ const container = document.getElementById('root')
 const root = createRoot(container!) // createRoot(container!) if you use TypeScript
 root.render(
     <Provider store={store}>
-        <RouterProvider router={router} />
+        {/* <RouterProvider router={router} /> */}
+        <CustomRouter history={customHistory}>
+            <ErrorBoundary>
+                <Routes>
+                    <Route path={'/'} element={<Main />} />
+
+                    <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+            </ErrorBoundary>
+        </CustomRouter>
     </Provider>
 )

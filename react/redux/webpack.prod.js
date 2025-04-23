@@ -13,7 +13,7 @@ module.exports = merge(common, {
         minimize: true,
         minimizer: [
             new TerserPlugin({
-                minify: TerserPlugin.swcMinify,
+                // minify: TerserPlugin.swcMinify,
                 // for typescript
                 terserOptions: {
                     compress: true

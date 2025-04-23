@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
-    content: [],
+    content: ['./src/**/*.{js,jsx,ts,tsx}', './src/index.html'],
     theme: {
         // colors: {
         //     blue: '#1fb6ff',
@@ -26,6 +27,6 @@ module.exports = {
         //         '4xl': '2rem'
         //     }
         // }
-    },
-    plugins: ['postcss-preset-env', tailwindcss]
+    }
+    // plugins: ['postcss-preset-env', tailwindcss]
 }

@@ -9,6 +9,13 @@ const process = require('process')
 
 dotenv.config()
 
+// Serialise env into webpack
+// See https://webpack.js.org/plugins/environment-plugin/
+const envKeyValues = Object.keys(process.env).reduce((acc, key) => {
+    acc[`process.env.${key}`] = JSON.stringify(process.env[key])
+    return acc
+}, {})
+
 module.exports = {
     entry: './src/index.tsx',
     output: {
@@ -28,9 +35,7 @@ module.exports = {
                 path.join(process.cwd(), 'build/**/*')
             ]
         }),
-        new webpack.DefinePlugin({
-            'process.env': JSON.stringify(process.env)
-        }),
+        new webpack.DefinePlugin(envKeyValues),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: './src/index.html'
@@ -67,12 +72,13 @@ module.exports = {
             {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: './'
-                        }
-                    },
+                    // {
+                    //     loader: MiniCssExtractPlugin.loader,
+                    //     options: {
+                    //         publicPath: './'
+                    //     }
+                    // },
+                    'style-loader',
                     'css-loader',
                     //? for sass (however tailwind does not like sass)
                     //* this is needed for sass relative path handling
@@ -90,13 +96,14 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|jpg|gif|mp3)$/,
-                type: 'asset',
-                parser: {
-                    dataUrlCondition: {
-                        maxSize: 8192
-                    }
-                },
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                type: 'asset/resource',
+                // parser: {
+                //     dataUrlCondition: {
+                //         maxSize: 8192
+                //     }
+                // },
+                // ? Maintain file location and extensions
                 generator: {
                     filename: 'assets/images/[name][ext]'
                 }
